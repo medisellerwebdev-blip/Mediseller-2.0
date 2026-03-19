@@ -155,7 +155,13 @@ async def test_db_connection():
         await client.admin.command('ping')
         return {"status": "success", "message": "Connected successfully to MongoDB Atlas!"}
     except Exception as e:
-        return {"status": "error", "message": str(e), "url_preview": url[:30] + "..." if url else "None"}
+        query_string = url.split('?')[1] if '?' in url else "None"
+        return {
+            "status": "error", 
+            "message": str(e), 
+            "query_parameters": query_string,
+            "url_preview": url[:20] + "..." + url[-10:] if url else "None"
+        }
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
