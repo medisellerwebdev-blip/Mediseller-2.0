@@ -115,7 +115,7 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
-USE_MOCK_DB = os.environ.get('USE_MOCK_DB', 'False').lower() == 'true'
+USE_MOCK_DB = os.environ.get('USE_MOCK_DB', 'True').lower() == 'true'
 
 if USE_MOCK_DB:
     logger.info("Using MockDB for local development")
