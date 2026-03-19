@@ -507,20 +507,7 @@ async def get_site_config():
     if "_id" in config: config["_id"] = str(config["_id"])
     return config
 
-@api_router.post("/admin/site-config")
-async def update_site_config(config: dict, request: Request):
-    # Admin check
-    session_token = request.cookies.get("admin_session")
-    if session_token != ADMIN_SESSION_TOKEN:
-        raise HTTPException(status_code=403, detail="Not authorized")
-    
-    config["updated_at"] = datetime.now(timezone.utc).isoformat()
-    config["active"] = True
-    
-    # Simple implementation: always replace the active one
-    await db.site_config.delete_one({"active": True})
-    await db.site_config.insert_one(config)
-    return {"message": "Config updated"}
+
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
