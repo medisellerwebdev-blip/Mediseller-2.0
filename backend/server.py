@@ -1537,6 +1537,72 @@ async def seed_database():
         "testimonials": len(testimonials_data)
     }
 
+@api_router.post("/seed-config")
+async def seed_config_only():
+    """Seed only the site configuration to resolve data wipe issues"""
+    await db.site_config.delete_many({})
+    
+    default_config = {
+        "active": True,
+        "header": {
+            "logo_text": "MediSeller",
+            "nav_items": [
+                {"label": "Categories", "path": "/products#categories"},
+                {"label": "All Products", "path": "/products"},
+                {"label": "Expert Consultation", "path": "/consultation"},
+                {"label": "About Us", "path": "/about"}
+            ]
+        },
+        "hero": {
+            "badge": "45+ Years of Heritage",
+            "title": "Global Access to Authentic Medicine",
+            "subtitle": "Secure 100% original generic medications from India. Save over 60% with insured delivery to 30+ countries. Trusted by patients worldwide for nearly half a century.",
+            "primary_cta": {"text": "View All Products", "path": "/products"},
+            "secondary_cta": {"text": "Talk to Expert", "path": "/consultation"},
+            "image_url": "https://images.unsplash.com/photo-1576091358783-a212ec293ff3?w=800",
+            "background_image_url": None,
+            "patients_count": "150K+",
+            "rating": 4.9,
+            "trust_avatars": [
+                "https://i.pravatar.cc/100?img=11",
+                "https://i.pravatar.cc/100?img=12",
+                "https://i.pravatar.cc/100?img=13",
+                "https://i.pravatar.cc/100?img=14"
+            ],
+            "floating_card_title": "100% Authentic",
+            "floating_card_subtitle": "Verified Products",
+            "floating_card_icon": "CheckCircle",
+            "savings_badge_percentage": "60%",
+            "savings_badge_text": "Average Savings"
+        },
+        "stats": {
+            "items": [
+                {"value": "45+", "label": "Years of Excellence"},
+                {"value": "30+", "label": "Countries Served"},
+                {"value": "150K+", "label": "Happy Customers"},
+                {"value": "99%", "label": "Delivery Rate"}
+            ]
+        },
+        "categories_section": {
+            "badge": "Browse by Category",
+            "title": "Life-Saving & Lifestyle Medications",
+            "subtitle": "We specialize in affordable generic medications for serious health conditions. All products are sourced from licensed manufacturers.",
+            "cards": [
+                {"title": "Cancer Medications", "subtitle": "Life-saving oncology treatments", "icon_name": "Ribbon", "color_class": "from-pink-500/10 to-pink-500/5", "path": "/products?category=Cancer"},
+                {"title": "HIV/AIDS Treatment", "subtitle": "Antiretroviral therapies", "icon_name": "Activity", "color_class": "from-purple-500/10 to-purple-500/5", "path": "/products?category=HIV"},
+                {"title": "Hepatitis", "subtitle": "Cure hepatitis C in 12 weeks", "icon_name": "ShieldAlert", "color_class": "from-teal-500/10 to-teal-500/5", "path": "/products?category=Hepatitis"},
+                {"title": "Erectile Dysfunction", "subtitle": "Trusted ED medications", "icon_name": "Zap", "color_class": "from-blue-500/10 to-blue-500/5", "path": "/products?category=ED"},
+                {"title": "Diabetes & Insulin", "subtitle": "Insulin and oral medications", "icon_name": "Stethoscope", "color_class": "from-orange-500/10 to-orange-500/5", "path": "/products?category=Diabetes"},
+                {"title": "Weight Loss", "subtitle": "FDA-approved solutions", "icon_name": "Scale", "color_class": "from-green-500/10 to-green-500/5", "path": "/products?category=WeightLoss"}
+            ]
+        },
+        "favicon_url": "https://mediseller.com/favicon.ico",
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.site_config.insert_one(default_config)
+    return {"message": "Config seeded successfully"}
+
 # Image Upload Endpoint
 @api_router.post("/admin/upload-image")
 async def upload_image(file: UploadFile = File(...)):

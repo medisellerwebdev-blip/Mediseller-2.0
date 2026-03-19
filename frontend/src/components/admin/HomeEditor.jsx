@@ -21,6 +21,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 
+const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+
 const ImageUploadField = ({ label, value, onChange, placeholder = "https://example.com/image.jpg" }) => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
@@ -34,7 +36,7 @@ const ImageUploadField = ({ label, value, onChange, placeholder = "https://examp
 
     setUploading(true);
     try {
-      const res = await fetch('http://localhost:8001/api/admin/upload-image', {
+      const res = await fetch(`${API_URL}/api/admin/upload-image`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -100,7 +102,7 @@ export default function HomeEditor() {
 
   const fetchConfig = async () => {
     try {
-      const res = await fetch('http://localhost:8001/api/site-config');
+      const res = await fetch(`${API_URL}/api/site-config`);
       const data = await res.json();
       setConfig(data);
     } catch (error) {
@@ -113,7 +115,7 @@ export default function HomeEditor() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch('http://localhost:8001/api/admin/site-config', {
+      const res = await fetch(`${API_URL}/api/admin/site-config`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(config),
