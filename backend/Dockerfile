@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements_filtered.txt .
+RUN pip install --no-cache-dir -r requirements_filtered.txt
 RUN pip install --no-cache-dir certifi
 
 # Copy application code
