@@ -125,15 +125,15 @@ else:
         mongo_url = os.environ.get('MONGO_URL', '')
         mongo_client = AsyncIOMotorClient(
             mongo_url, 
-            tlsCAFile=ca, 
             tlsAllowInvalidCertificates=True,
             tlsAllowInvalidHostnames=True,
             ssl_cert_reqs=ssl.CERT_NONE,
-            serverSelectionTimeoutMS=2000
+            serverSelectionTimeoutMS=10000
         )
         db = mongo_client[os.environ.get('DB_NAME', 'mediseller_v2')]
     except Exception as e:
-        logger.warning(f"Failed to connect to MongoDB, using MockDB: {e}")
+        logger.warning(f"Failed to connect to MongoDB, falling back to MockDB: {e}")
+        db = MockDB()
 # Admin Credentials (Initial/Default)
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@mediseller.com')
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'MediSeller#Admin@2026')
