@@ -127,7 +127,6 @@ else:
             mongo_url, 
             tlsAllowInvalidCertificates=True,
             tlsAllowInvalidHostnames=True,
-            ssl_cert_reqs=ssl.CERT_NONE,
             serverSelectionTimeoutMS=10000
         )
         db = mongo_client[os.environ.get('DB_NAME', 'mediseller_v2')]
@@ -150,7 +149,6 @@ async def test_db_connection():
             url, 
             tlsAllowInvalidCertificates=True,
             tlsAllowInvalidHostnames=True,
-            ssl_cert_reqs=ssl.CERT_NONE,
             serverSelectionTimeoutMS=5000
         )
         # Ping the server
