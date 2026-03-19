@@ -115,7 +115,7 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
-USE_MOCK_DB = os.environ.get('USE_MOCK_DB', 'True').lower() == 'true'
+USE_MOCK_DB = os.environ.get('USE_MOCK_DB', 'False').lower() == 'true'
 
 if USE_MOCK_DB:
     logger.info("Using MockDB for local development")
@@ -1540,7 +1540,7 @@ async def seed_database():
 @api_router.post("/seed-config")
 async def seed_config_only():
     """Seed only the site configuration to resolve data wipe issues"""
-    await db.site_config.delete_many({})
+    await db.site_config.delete_one({"active": True})
     
     default_config = {
         "active": True,
