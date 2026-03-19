@@ -142,6 +142,23 @@ ADMIN_SESSION_TOKEN = f"admin_{uuid.uuid4().hex[:16]}"
 # Create the main app
 app = FastAPI(title="MediSeller API", description="Online Pharmacy API")
 
+@app.get("/api/test-db")
+async def test_db_connection():
+    try:
+        url = os.environ.get('MONGO_URL', '')
+        client = AsyncIOMotorClient(
+            url, 
+            tlsAllowInvalidCertificates=True,
+            tlsAllowInvalidHostnames=True,
+            ssl_cert_reqs=ssl.CERT_NONE,
+            serverSelectionTimeoutMS=5000
+        )
+        # Ping the server
+        await client.admin.command('ping')
+        return {"status": "success", "message": "Connected successfully to MongoDB Atlas!"}
+    except Exception as e:
+        return {"status": "error", "message": str(e), "url_preview": url[:30] + "..." if url else "None"}
+
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
